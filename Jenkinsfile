@@ -12,17 +12,41 @@ pipeline {
                 bat 'composer install'
             }
         }
-        stage('Run Tests') {
+        stage('Static Analysis') {
+            parallel {
+                stage('Code Style') {
+                    steps {
+                        // Vérifie le respect du standard PSR-12
+                        bat 'vendor\\bin\\phpcs --standard=PSR12 src'
+                    }
+                }
+                stage('Static Code Analysis') {
+                    steps {
+                        // Analyse statique du code avec PHPStan
+                        bat 'vendor\\bin\\phpstan analyse src --level max'
+                    }
+                }
+            }
+        }
+        stage('Run Unit Tests') {
             steps {
-                // Génération d'un rapport XML de test
-                bat 'vendor\\bin\\phpunit --log-junit test-results.xml'
+                // Exécute les tests unitaires et génère un rapport JUnit
+                bat 'vendor\\bin\\phpunit --configuration phpunit.xml --coverage-html coverage --log-junit test-results.xml'
+            }
+        }
+        stage('Audit de sécurité') {
+            steps {
+                // Vérifie les vulnérabilités dans les dépendances
+                bat 'composer audit'
             }
         }
     }
     post {
         always {
-            // Récupération du rapport de test généré
+            // Publie le rapport de tests
             junit 'test-results.xml'
+            // Archive le rapport de couverture de code (HTML)
+            archiveArtifacts artifacts: 'coverage/**', allowEmptyArchive: true
         }
     }
 }
