@@ -1,0 +1,11 @@
+etudiants
+
+users : 21INF013398
+mot de passe : 123456
+
+
+admin
+
+users : ADMIN12345
+mot de passe : admin1234
+
