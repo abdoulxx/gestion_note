@@ -4,28 +4,25 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Clonage du repository depuis GitHub
                 git branch: 'main', url: 'https://github.com/abdoulxx/gestion_note.git'
             }
         }
         stage('Install Dependencies') {
             steps {
-                // Installation des dépendances via Composer
                 bat 'composer install'
             }
         }
         stage('Run Tests') {
             steps {
-                // Exécution des tests avec PHPUnit
-                bat 'vendor\\bin\\phpunit'
+                // Génération d'un rapport XML de test
+                bat 'vendor\\bin\\phpunit --log-junit test-results.xml'
             }
         }
     }
-
     post {
         always {
-            // Optionnel : Publier les résultats des tests si vous générez des rapports XML
-            junit 'tests/**/*.xml'
+            // Récupération du rapport de test généré
+            junit 'test-results.xml'
         }
     }
 }
