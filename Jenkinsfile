@@ -17,12 +17,18 @@ pipeline {
                 echo "Build stage: Compilation / Packaging (si nécessaire)"
             }
         }
-        stage('Run Tests') {
-    steps {
-        echo "Exécution des tests Selenium via le script Python"
-        bat '"C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\selenium_tests.py'
-    }
-}
+        stage('Run Selenium Tests - Test 1') {
+            steps {
+                echo "Exécution du premier test Selenium"
+                bat '"C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\selenium_tests.py'
+            }
+        }
+        stage('Run Selenium Tests - Test 2') {
+            steps {
+                echo "Exécution du deuxième test Selenium"
+                bat '"C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\selenium_test_pack_or.py'
+            }
+        }
     }
     post {
         always {
