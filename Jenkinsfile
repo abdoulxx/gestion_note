@@ -31,10 +31,16 @@ pipeline {
             }
         }
         */
-        stage('Run ZAP Security Scan') {
+        stage('Run spider') {
             steps {
                 echo "Lancement du test de sécurité avec ZAP"
                 bat '"C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\spider.py'
+            }
+        }
+        stage('Run Scan_active') {
+            steps {
+                echo "Lancement du test de sécurité avec ZAP"
+                bat '"C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\scan_active.py'
             }
         }
     }
