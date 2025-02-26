@@ -1,0 +1,81 @@
+name: CI Pipeline GestionNote
+
+on:
+  schedule:
+    - cron: "0 */12 * * *"  # Exécute le workflow toutes les 12 heures
+  push:
+    branches:
+      - main  # Déclenche l'exécution à chaque push sur la branche "main"
+  pull_request:
+    branches:
+      - main  # Déclenche l'exécution sur chaque PR vers "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Installer PHP et Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+          coverage: none
+
+      - name: 🔧 Installer les dépendances PHP
+        run: composer install --no-progress --no-interaction
+
+      - name: 🐍 Installer Python et dépendances Selenium/ZAP
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 🛠 Installer les dépendances Python
+        run: |
+          pip install -r requirements.txt
+          pip install zapv2 selenium
+
+      - name: 🚀 Exécuter les tests Selenium (Test 1)
+        run: python tests/selenium_tests.py
+
+      - name: 🚀 Exécuter les tests Selenium (Test 2)
+        run: python tests/selenium_test_pack_or.py
+
+      - name: 🕷️ Lancer Spider ZAP
+        run: python tests/spider.py
+
+      - name: 🔍 Lancer Scan Actif ZAP
+        run: python tests/active_scan.py
+
+      - name: 🔑 Lancer Scan Authentification ZAP
+        run: python tests/form_autentification.py
+
+      - name: 📧 Envoyer une notification en cas de succès
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "✅ [SUCCÈS] Pipeline Jenkins - Tests réussis !"
+          to: "ton-email@example.com"
+          from: "GitHub Actions"
+          body: "Tous les tests Selenium et ZAP ont réussi. Consulte Jenkins pour plus d'infos."
+
+      - name: 📧 Envoyer une notification en cas d'échec
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "❌ [ÉCHEC] Pipeline Jenkins - Tests échoués !"
+          to: "ton-email@example.com"
+          from: "GitHub Actions"
+          body: "Certains tests ont échoué. Consulte Jenkins pour voir les logs."
+
