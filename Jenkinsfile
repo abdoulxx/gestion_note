@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                // Récupération du code depuis GitHub sur la branche main
                 git branch: 'main', url: 'https://github.com/abdoulxx/gestion_note.git'
             }
         }
@@ -11,20 +12,19 @@ pipeline {
             steps {
                 // Installation des dépendances PHP via Composer
                 bat 'composer install'
-                // (Optionnel) Installation des dépendances Python si vous avez un fichier requirements.txt
-                bat 'pip install -r requirements.txt'
+                // L'installation des dépendances Python est omise ici
             }
         }
         stage('Build') {
             steps {
-                echo "Build stage : Compilation / Packaging (si nécessaire)"
-                // Pour un projet PHP, vous pouvez ajouter ici des étapes de build si besoin (ex: minification, etc.)
+                echo "Build stage: Compilation / Packaging (si nécessaire)"
+                // Ajoutez ici vos commandes de build si besoin
             }
         }
         stage('Run Tests') {
             steps {
                 echo "Exécution des tests Selenium via le script Python"
-                // Lancement du script Python Selenium (assurez-vous que le chemin est correct)
+                // Lancement du script Selenium qui se trouve dans tests\selenium_tests.py
                 bat 'python tests\\selenium_tests.py'
             }
         }
@@ -32,7 +32,7 @@ pipeline {
     post {
         always {
             echo "Pipeline terminé"
-            // Si votre script Selenium génère un rapport (par exemple en JUnit XML), vous pouvez le récupérer :
+            // Si votre script Selenium génère un rapport JUnit XML, décommentez la ligne suivante :
             // junit 'path/to/selenium-report.xml'
         }
     }
