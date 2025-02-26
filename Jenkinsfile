@@ -17,7 +17,7 @@ pipeline {
                 echo "Build stage: Compilation / Packaging (si nécessaire)"
             }
         }
-        /*
+        
         stage('Run Selenium Tests - Test 1') {
             steps {
                 echo "Exécution du premier test Selenium"
@@ -30,7 +30,7 @@ pipeline {
                 bat '"C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\selenium_test_pack_or.py'
             }
         }
-        */
+        
         stage('Run spider') {
             steps {
                 echo "Lancement du test de sécurité avec ZAP"
