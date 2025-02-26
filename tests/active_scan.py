@@ -38,12 +38,12 @@ while len(alerts) > 0:
         preuve = alert.get('evidence', 'Non disponible')
 
         # Affichage formaté
-        print("🔴 Alerte détectée !")
-        print(f"   ➤ Nom : {nom_alerte}")
-        print(f"   ➤ Niveau de risque : {risque}")
-        print(f"   ➤ URL concernée : {url}")
-        print(f"   ➤ Paramètre affecté : {param}")
-        print(f"   ➤ Preuve : {preuve}\n")
+        print(" Alerte détectée !")
+        print(f"    Nom : {nom_alerte}")
+        print(f"    Niveau de risque : {risque}")
+        print(f"    URL concernée : {url}")
+        print(f"    Paramètre affecté : {param}")
+        print(f"    Preuve : {preuve}\n")
         print("-" * 50)
 
     # Passage à la page suivante
