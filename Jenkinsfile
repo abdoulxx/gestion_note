@@ -18,12 +18,11 @@ pipeline {
             }
         }
         stage('Run Tests') {
-            steps {
-                echo "Exécution des tests Selenium via le script Python"
-                // Remplacez le chemin ci-dessous par le chemin complet vers votre python.exe
-                bat '"C:\\Users\\aboul\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Python 3.13\\python.exe" tests\\selenium_tests.py'
-            }
-        }
+    steps {
+        echo "Exécution des tests Selenium via le script Python"
+        bat '"C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\selenium_tests.py'
+    }
+}
     }
     post {
         always {
