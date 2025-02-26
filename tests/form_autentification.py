@@ -56,7 +56,7 @@ def set_user_auth_config():
 # 🔹 Lancement de l'exploration (Spider)
 def start_spider(user_id):
     zap.spider.scan_as_user(context_id, user_id, target_url, recurse='true')
-    print('🔍 Started scanning with authentication...')
+    print(' Started scanning with authentication...')
 
 # 🔹 Attente de la fin du scan
 def wait_for_spider():
