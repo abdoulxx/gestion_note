@@ -13,8 +13,8 @@ zap = ZAPv2(apikey=apiKey, proxies={'http': 'http://127.0.0.1:8081', 'https': 'h
 print(f"Scan Spider en cours sur {target}...")
 
 # ✅ Optimisation : Limiter la profondeur et le temps du scan
-zap.spider.set_option_max_depth(2)  # Profondeur max à 2 niveaux
-zap.spider.set_option_max_duration(30)  # Scan limité à 30 secondes
+zap.spider.set_option_max_depth(1)  # Profondeur max à 2 niveaux
+zap.spider.set_option_max_duration(10)  # Scan limité à 30 secondes
 
 # ✅ Désactiver AJAX Spider pour accélérer (optionnel)
 zap.ajaxSpider.stop()
