@@ -8,7 +8,7 @@ target = 'https://regisono.com'
 apiKey = '1odfud9vtbks0u32430lmt6cqc'
 
 # Connexion à l'API de ZAP (assurez-vous que ZAP est lancé)
-zap = ZAPv2(apikey=apiKey)
+zap = ZAPv2(apikey=apiKey, proxies={'http': 'http://127.0.0.1:8081', 'https': 'http://127.0.0.1:8081'})
 
 print(f"Scan Spider en cours sur {target}...")
 
