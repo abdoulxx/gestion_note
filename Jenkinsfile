@@ -43,6 +43,12 @@ pipeline {
                 bat '"C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\active_scan.py'
             }
         }
+        stage('Run form_autentification') {
+            steps {
+                echo "Lancement du test de sécurité avec ZAP"
+                bat '"C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\form_autentification.py'
+            }
+        }
     }
     post {
         always {
