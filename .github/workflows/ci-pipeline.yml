@@ -15,42 +15,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🔄 Checkout Repository
+      - name:  Checkout Repository
         uses: actions/checkout@v4
 
-      - name: 📦 Installer PHP et Composer
+      - name:  Installer PHP et Composer
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
           tools: composer
           coverage: none
 
-      - name: 🔧 Installer les dépendances PHP
+      - name:  Installer les dépendances PHP
         run: composer install --no-progress --no-interaction
 
-      - name: 🐍 Installer Python et dépendances Selenium/ZAP
+      - name:  Installer Python et dépendances Selenium/ZAP
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
-      - name: 🛠 Installer les dépendances Python
+      - name:  Installer les dépendances Python
         run: |
           pip install -r requirements.txt
           pip install zapv2 selenium
 
-      - name: 🚀 Exécuter les tests Selenium (Test 1)
+      - name: Exécuter les tests Selenium (Test 1)
         run: python tests/selenium_tests.py
 
-      - name: 🚀 Exécuter les tests Selenium (Test 2)
+      - name: Exécuter les tests Selenium (Test 2)
         run: python tests/selenium_test_pack_or.py
 
-      - name: 🕷️ Lancer Spider ZAP
+      - name: 🕷Lancer Spider ZAP
         run: python tests/spider.py
 
-      - name: 🔍 Lancer Scan Actif ZAP
+      - name: Lancer Scan Actif ZAP
         run: python tests/active_scan.py
 
-      - name: 🔑 Lancer Scan Authentification ZAP
+      - name:  Lancer Scan Authentification ZAP
         run: python tests/form_autentification.py
 
       - name: 📧 Envoyer une notification en cas de succès
@@ -61,8 +61,8 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "✅ [SUCCÈS] Pipeline Jenkins - Tests réussis !"
-          to: "ton-email@example.com"
+          subject: "[SUCCÈS] Pipeline Jenkins - Tests réussis !"
+          to: "aboulayesamb@example.com"
           from: "GitHub Actions"
           body: "Tous les tests Selenium et ZAP ont réussi. Consulte Jenkins pour plus d'infos."
 
@@ -75,7 +75,7 @@ jobs:
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "❌ [ÉCHEC] Pipeline Jenkins - Tests échoués !"
-          to: "ton-email@example.com"
+          to: "aboulayesamb@example.com"
           from: "GitHub Actions"
           body: "Certains tests ont échoué. Consulte Jenkins pour voir les logs."
 
