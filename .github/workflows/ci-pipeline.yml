@@ -62,7 +62,7 @@ jobs:
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "[SUCCÈS] Pipeline Jenkins - Tests réussis !"
-          to: "aboulayesamb@example.com"
+          to: "aboulayesamb@gmail.com"
           from: "GitHub Actions"
           body: "Tous les tests Selenium et ZAP ont réussi. Consulte Jenkins pour plus d'infos."
 
@@ -75,7 +75,7 @@ jobs:
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "❌ [ÉCHEC] Pipeline Jenkins - Tests échoués !!"
-          to: "aboulayesamb@example.com"
+          to: "aboulayesamb@gmail.com"
           from: "GitHub Actions"
           body: "Certains tests ont échoué. Consulte Jenkins pour voir les logs."
 

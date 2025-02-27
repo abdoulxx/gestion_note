@@ -1,4 +1,4 @@
 selenium
-zapv2
+python-owasp-zap-v2.4
 urllib3
 requests
