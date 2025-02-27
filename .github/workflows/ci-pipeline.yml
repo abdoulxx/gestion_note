@@ -15,56 +15,56 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: 📥 Checkout du dépôt
         uses: actions/checkout@v4
 
-      - name: Installer PHP et Composer
+      - name: ⚙️ Installer PHP et Composer
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
           tools: composer
           coverage: none
 
-      - name: Installer les dépendances PHP
+      - name: 📦 Installer les dépendances PHP
         run: composer install --no-progress --no-interaction
 
-      - name: Installer Python et dépendances Selenium/ZAP
+      - name: 🐍 Installer Python et dépendances Selenium/ZAP
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Installer les dépendances Python
+      - name: 📦 Installer les dépendances Python
         run: pip install -r requirements.txt
 
-      - name: Vérifier installation Chrome et ChromeDriver
+      - name: 🌐 Installer Google Chrome et ChromeDriver
+        run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable chromium-chromedriver
+          sudo ln -sf /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
+
+      - name: 🔍 Vérifier l'installation de Chrome et ChromeDriver
         run: |
           which google-chrome
           which chromedriver
           google-chrome --version
           chromedriver --version
-      
 
-      - name: Vérifier installation Chrome et ChromeDriver
-        run: |
-          google-chrome --version
-          chromedriver --version
-
-      - name: Exécuter les tests Selenium (Test 1)
+      - name: ✅ Exécuter les tests Selenium (Test 1)
         run: python tests/selenium_tests.py
 
-      - name: Exécuter les tests Selenium (Test 2)
+      - name: ✅ Exécuter les tests Selenium (Test 2)
         run: python tests/selenium_test_pack_or.py
 
       - name: 🕷 Lancer Spider ZAP
         run: python tests/spider.py
 
-      - name: Lancer Scan Actif ZAP
+      - name: 🔍 Lancer Scan Actif ZAP
         run: python tests/active_scan.py
 
-      - name: Lancer Scan Authentification ZAP
+      - name: 🔑 Lancer Scan Authentification ZAP
         run: python tests/form_autentification.py
 
-      - name: 📧 Envoyer une notification en cas de succès
+      - name: ✅ 📧 Envoyer une notification en cas de succès
         if: success()
         uses: dawidd6/action-send-mail@v3
         with:
@@ -77,7 +77,7 @@ jobs:
           from: "GitHub Actions"
           body: "Tous les tests Selenium et ZAP ont réussi. Consulte les logs pour plus d'infos."
 
-      - name: 📧 Envoyer une notification en cas d'échec
+      - name: ❌ 📧 Envoyer une notification en cas d'échec
         if: failure()
         uses: dawidd6/action-send-mail@v3
         with:
