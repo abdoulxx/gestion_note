@@ -36,7 +36,7 @@ jobs:
       - name:  Installer les dépendances Python
         run: |
           pip install -r requirements.txt
-          pip install zapv2 selenium
+          
 
       - name: Exécuter les tests Selenium (Test 1)
         run: python tests/selenium_tests.py
