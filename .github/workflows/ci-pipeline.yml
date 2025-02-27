@@ -41,7 +41,8 @@ jobs:
           sudo apt update
           sudo apt install -y google-chrome-stable chromium-chromedriver
           sudo ln -sf /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
-
+          echo "WEBDRIVER_PATH=/usr/local/bin/chromedriver" >> $GITHUB_ENV
+      
       - name: 🔍 Vérifier l'installation de Chrome et ChromeDriver
         run: |
           echo "✅ Vérification des installations"
@@ -49,9 +50,12 @@ jobs:
           which chromedriver || echo "🚨 ChromeDriver non trouvé"
           google-chrome --version || echo "🚨 Problème avec Google Chrome"
           chromedriver --version || echo "🚨 Problème avec ChromeDriver"
-
+      
       - name: ✅ Exécuter les tests Selenium (Test 1)
+        env:
+          PATH: "/usr/local/bin:$PATH"  # 🔥 Ajoute ChromeDriver au PATH
         run: python tests/selenium_tests.py
+      
 
       - name: ✅ Exécuter les tests Selenium (Test 2)
         run: python tests/selenium_test_pack_or.py
