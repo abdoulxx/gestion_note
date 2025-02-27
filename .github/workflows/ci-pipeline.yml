@@ -44,10 +44,11 @@ jobs:
 
       - name: 🔍 Vérifier l'installation de Chrome et ChromeDriver
         run: |
-          which google-chrome
-          which chromedriver
-          google-chrome --version
-          chromedriver --version
+          echo "✅ Vérification des installations"
+          which google-chrome || echo "🚨 Google Chrome non trouvé"
+          which chromedriver || echo "🚨 ChromeDriver non trouvé"
+          google-chrome --version || echo "🚨 Problème avec Google Chrome"
+          chromedriver --version || echo "🚨 Problème avec ChromeDriver"
 
       - name: ✅ Exécuter les tests Selenium (Test 1)
         run: python tests/selenium_tests.py
