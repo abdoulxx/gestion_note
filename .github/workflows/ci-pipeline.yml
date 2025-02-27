@@ -31,7 +31,7 @@ jobs:
       - name:  Installer Python et dépendances Selenium/ZAP
         uses: actions/setup-python@v4
         with:
-          python-version: '3.13'
+          python-version: '3.13.0'
 
       - name:  Installer les dépendances Python
         run: |
