@@ -5,10 +5,10 @@ on:
     - cron: "0 */12 * * *"  # Exécute toutes les 12 heures
   push:
     branches:
-      - main  # Déclenche l'exécution à chaque push sur "main"
+      - main
   pull_request:
     branches:
-      - main  # Déclenche l'exécution sur chaque PR vers "main"
+      - main
 
 jobs:
   build:
@@ -36,17 +36,20 @@ jobs:
       - name: Installer les dépendances Python
         run: |
           pip install -r requirements.txt
-          
+         
 
       - name: Installer Google Chrome et ChromeDriver
         run: |
           sudo apt update
-          sudo apt install -y wget unzip
-          sudo wget -O /usr/local/bin/chromedriver https://storage.googleapis.com/chrome-for-testing-public/122.0.6261.94/linux64/chromedriver-linux64.zip
-          sudo chmod +x /usr/local/bin/chromedriver
           sudo apt install -y google-chrome-stable
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
+          DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          wget -N "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
 
-      - name: Vérifier l'installation de Chrome et ChromeDriver
+      - name: Vérifier installation Chrome et ChromeDriver
         run: |
           google-chrome --version
           chromedriver --version
