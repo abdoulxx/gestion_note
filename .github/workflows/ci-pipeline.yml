@@ -36,11 +36,13 @@ jobs:
       - name: Installer les dépendances Python
         run: pip install -r requirements.txt
 
-      - name: Installer Google Chrome et ChromeDriver
+      - name: Vérifier installation Chrome et ChromeDriver
         run: |
-          sudo apt update
-          sudo apt install -y google-chrome-stable chromium-chromedriver
-          sudo ln -sf /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
+          which google-chrome
+          which chromedriver
+          google-chrome --version
+          chromedriver --version
+      
 
       - name: Vérifier installation Chrome et ChromeDriver
         run: |
