@@ -1,54 +1,96 @@
-name: CI Pipeline
+name: CI Pipeline GestionNote
 
 on:
   schedule:
-    - cron: "0 */6 * * *"  # Exécution toutes les 6 heures
-  workflow_dispatch:  # Permet d'exécuter le workflow manuellement
+    - cron: "0 */12 * * *"  # Exécute toutes les 12 heures
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: windows-latest  # Exécute le job sur un runner Windows
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4  # Clone le repo GitHub
+        uses: actions/checkout@v4
 
-      - name: Set up PHP
+      - name: Installer PHP et Composer
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
           tools: composer
+          coverage: none
 
-      - name: Install Dependencies
-        run: composer install
+      - name: Installer les dépendances PHP
+        run: composer install --no-progress --no-interaction
 
-      - name: Build Stage
-        run: echo "Build stage: Compilation / Packaging (si nécessaire)"
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Installer Python et dépendances Selenium/ZAP
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.11'  # Adaptez à votre version Python
+          python-version: '3.10'
 
-      - name: Install Selenium Dependencies
+      - name: Installer les dépendances Python
         run: |
-          python -m pip install --upgrade pip
           pip install -r requirements.txt
+         
 
-      - name: Run Selenium Test 1
+      - name: Installer Google Chrome et ChromeDriver
+        run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
+          DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          wget -N "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+
+      - name: Vérifier installation Chrome et ChromeDriver
+        run: |
+          google-chrome --version
+          chromedriver --version
+
+      - name: Exécuter les tests Selenium (Test 1)
         run: python tests/selenium_tests.py
 
-      - name: Run Selenium Test 2
+      - name: Exécuter les tests Selenium (Test 2)
         run: python tests/selenium_test_pack_or.py
 
-      - name: Run Spider Test (ZAP)
+      - name: 🕷 Lancer Spider ZAP
         run: python tests/spider.py
 
-      - name: Run Active Scan (ZAP)
+      - name: Lancer Scan Actif ZAP
         run: python tests/active_scan.py
 
-      - name: Run Form Authentication Test (ZAP)
+      - name: Lancer Scan Authentification ZAP
         run: python tests/form_autentification.py
 
-      - name: Final Step
-        run: echo "Pipeline terminé"
+      - name: 📧 Envoyer une notification en cas de succès
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "[SUCCÈS] Pipeline - Tests réussis !"
+          to: "aboulayesamb@gmail.com"
+          from: "GitHub Actions"
+          body: "Tous les tests Selenium et ZAP ont réussi. Consulte les logs pour plus d'infos."
+
+      - name: 📧 Envoyer une notification en cas d'échec
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "❌ [ÉCHEC] Pipeline - Tests échoués !!"
+          to: "aboulayesamb@gmail.com"
+          from: "GitHub Actions"
+          body: "Certains tests ont échoué. Consulte les logs GitHub Actions."
