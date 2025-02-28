@@ -13,21 +13,15 @@ pipeline {
             }
         }
         
-        stage('Validate PHPStan Configuration') {
-    steps {
-        echo "Validation du fichier phpstan.neon"
-        script {
-            def exitCode = bat(
-                returnStatus: true,
-                script: 'vendor\\bin\\phpstan --debug'
-            )
-            if (exitCode != 0) {
-                error("Le fichier phpstan.neon contient des erreurs. Veuillez les corriger.")
+        stage('Static Code Analysis') {
+            steps {
+                echo "Exécution du test SCA avec PHPStan"
+                bat '''
+                    composer require --dev phpstan/phpstan
+                    vendor\\bin\\phpstan analyse --level=max src/
+                '''
             }
         }
-    }
-}
-
         
         stage('Build') {
             steps {
