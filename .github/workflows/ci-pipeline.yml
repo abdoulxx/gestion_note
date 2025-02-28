@@ -8,9 +8,8 @@ on:
       - main
 
 jobs:
-  security_scan:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: 📥 Cloner le dépôt
         uses: actions/checkout@v3
@@ -26,11 +25,11 @@ jobs:
       - name: 🐳 Vérifier Docker
         run: docker version
 
-      - name: 🐳 Lancer OWASP ZAP en mode headless (sans clé API)
+      - name: 🐳 Lancer OWASP ZAP en mode headless (avec accès API)
         run: |
           docker run -d --name zap -p 8080:8080 zaproxy/zap-stable zap.sh \
             -daemon -host 0.0.0.0 -port 8080 \
-            -config api.disablekey=true
+            -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true
           echo "⏳ Attente du démarrage de ZAP..."
 
           TIMEOUT=300 # Max 5 minutes
@@ -59,42 +58,16 @@ jobs:
         run: docker logs zap
 
       - name: 🛠 Installer les dépendances Python
-        run: |
-          python3 -m venv venv
-          source venv/bin/activate
-          pip install python-owasp-zap-v2.4
+        run: pip install python-owasp-zap-v2.4
 
       - name: 🕷 Exécuter Spider Scan
-        run: |
-          source venv/bin/activate
-          python3 tests/spider.py
+        run: python3 tests/spider.py
 
       - name: 🔥 Exécuter Active Scan
-        run: |
-          source venv/bin/activate
-          python3 tests/active_scan.py
+        run: python3 tests/active_scan.py
 
       - name: 🔑 Exécuter Form Authentication
-        run: |
-          source venv/bin/activate
-          python3 tests/form_autentification.py
-
-      - name: 📜 Sauvegarder les rapports ZAP
-        run: |
-          docker cp zap:/home/zap/.ZAP/report.xml ./zap-report.xml
-          docker cp zap:/home/zap/.ZAP/alerts.json ./zap-alerts.json
-
-      - name: 📤 Publier les résultats en artefact
-        uses: actions/upload-artifact@v3
-        with:
-          name: zap-reports
-          path: |
-            zap-report.xml
-            zap-alerts.json
-
-      - name: 🚮 Nettoyer les conteneurs Docker
-        run: |
-          docker stop zap && docker rm zap
+        run: python3 tests/form_autentification.py
 
       - name: 📩 Envoyer une notification par mail
         uses: dawidd6/action-send-mail@v3
@@ -103,17 +76,17 @@ jobs:
           server_port: 465
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "[GitHub Actions] Exécution terminée : Pipeline Gestion_Note"
+          subject: "[GitHub Actions] Exécution terminée : Pipeline gestion_note"
           to: "aboulayesamb@gmail.com"
           from: "GitHub Actions"
           body: |
             Bonjour,
 
-            L'exécution du pipeline CI/CD s'est terminée avec succès.
+            L'exécution du pipeline CI/CD est terminée avec succès.
 
-            🔹 Résultat : ${{ job.status }}
-            📅 Date : $(date)
-            📑 Rapport ZAP : [Télécharger ici](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            - ✅ Résultat : ${{ job.status }}
+            - 📅 Date : $(date)
+            - 🔍 Consultez GitHub Actions pour plus de détails.
 
             Cordialement,
             GitHub Actions
