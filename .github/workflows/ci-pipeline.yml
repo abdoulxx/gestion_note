@@ -22,10 +22,19 @@ jobs:
           sudo mv composer.phar /usr/local/bin/composer
           composer install
 
+      - name: 🐳 Vérifier Docker
+        run: docker version
+
+      - name: 🛠 Télécharger l'image OWASP ZAP
+        run: docker pull owasp/zap2docker-stable
+
       - name: 🐳 Lancer OWASP ZAP en mode headless
         run: |
           docker run -d --name zap -p 8080:8080 owasp/zap2docker-stable zap.sh -daemon -port 8080
-          sleep 10 # Attendre que ZAP démarre
+          sleep 15 # Laisser ZAP démarrer
+
+      - name: 📜 Vérifier les logs de ZAP
+        run: docker logs zap
 
       - name: 🕷 Exécuter Spider Scan
         run: python3 tests/spider.py
@@ -43,7 +52,7 @@ jobs:
           server_port: 465
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "[Jenkins] Exécution terminée : Pipeline gestion_note"
+          subject: "[GitHub Actions] Exécution terminée : Pipeline gestion_note"
           to: "aboulayesamb@gmail.com"
           from: "GitHub Actions"
           body: |
