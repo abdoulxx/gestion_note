@@ -25,16 +25,18 @@ jobs:
       - name: 🐳 Vérifier Docker
         run: docker version
 
-      - name: 🐳 Lancer OWASP ZAP en mode headless (debug activé)
+      - name: 🐳 Lancer OWASP ZAP en mode headless (avec accès API)
         run: |
-          docker run -d --name zap -p 8080:8080 zaproxy/zap-stable zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true -config database.newsession=sqlite
+          docker run -d --name zap -p 8080:8080 zaproxy/zap-stable zap.sh \
+            -daemon -host 0.0.0.0 -port 8080 \
+            -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true
           echo "⏳ Attente du démarrage de ZAP..."
-          
+
           TIMEOUT=300 # Max 5 minutes
           ELAPSED=0
           while true; do
             if curl -s http://127.0.0.1:8080 > /dev/null; then
-              echo "✅ OWASP ZAP est prêt !"
+              echo "✅ OWASP ZAP est prêt et accepte les connexions API !"
               break
             fi
             if [ "$ELAPSED" -ge "$TIMEOUT" ]; then
