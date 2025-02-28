@@ -13,13 +13,18 @@ pipeline {
             }
         }
         
-        stage('Static Code Analysis') {
+          stage('Static Code Analysis') {
             steps {
                 echo "Exécution du test SCA avec PHPStan"
-                bat '''
-                    composer require --dev phpstan/phpstan
-                    vendor\\bin\\phpstan analyse --level=max src/
-                '''
+                script {
+                    def exitCode = bat(
+                        returnStatus: true,
+                        script: 'vendor\\bin\\phpstan analyse --level=max .'
+                    )
+                    if (exitCode != 0) {
+                        error("PHPStan a détecté des erreurs. Veuillez les corriger.")
+                    }
+                }
             }
         }
         

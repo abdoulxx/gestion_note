@@ -1,0 +1,15 @@
+parameters:
+    level: 5  # Niveau d'analyse (0 à 9)
+    paths:
+        - admin_notes.php
+        - a_rattraper.php
+        - config.php
+        - create_admin.php
+        - dashboard.php
+        - index.php
+        - logout.php
+        - reclamation.php
+        - register.php
+        - resultats.php
+    excludePaths:
+        - vendor/.*  # Exclure les fichiers du dossier vendor
