@@ -32,14 +32,13 @@ jobs:
             exit 1
           fi
           echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
-      
 
       - name: 🛠 Télécharger l'image OWASP ZAP (nouveau dépôt)
-        run: docker pull ghcr.io/zaproxy/zap-stable
+        run: docker pull ghcr.io/zaproxy/zap2docker-stable:latest
 
       - name: 🐳 Lancer OWASP ZAP en mode headless
         run: |
-          docker run -d --name zap -p 8080:8080 ghcr.io/zaproxy/zap-stable zap.sh -daemon -port 8080
+          docker run -d --name zap -p 8080:8080 ghcr.io/zaproxy/zap2docker-stable:latest zap.sh -daemon -port 8080
           sleep 15 # Laisser ZAP démarrer
 
       - name: 📜 Vérifier les logs de ZAP
