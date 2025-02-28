@@ -12,6 +12,17 @@ pipeline {
                 bat 'composer install'
             }
         }
+        
+        stage('Static Code Analysis') {
+            steps {
+                echo "Exécution du test SCA avec PHPStan"
+                bat '''
+                    composer require --dev phpstan/phpstan
+                    vendor\\bin\\phpstan analyse --level=max src/
+                '''
+            }
+        }
+        
         stage('Build') {
             steps {
                 echo "Build stage: Compilation / Packaging (si nécessaire)"
