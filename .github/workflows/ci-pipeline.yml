@@ -1,96 +1,59 @@
-name: CI Pipeline GestionNote
+name: CI/CD Gestion_Note
 
 on:
   schedule:
-    - cron: "0 */12 * * *"  # Exécute toutes les 12 heures
+    - cron: '0 */12 * * *' # Exécution toutes les 12 heures
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: 📥 Checkout du dépôt
-        uses: actions/checkout@v4
+      - name: 📥 Cloner le dépôt
+        uses: actions/checkout@v3
 
-      - name: ⚙️ Installer PHP et Composer
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-          tools: composer
-          coverage: none
-
-      - name: 📦 Installer les dépendances PHP
-        run: composer install --no-progress --no-interaction
-
-      - name: 🐍 Installer Python et dépendances Selenium/ZAP
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: 📦 Installer les dépendances Python
-        run: pip install -r requirements.txt
-
-      - name: 🌐 Installer Google Chrome et ChromeDriver
+      - name: 🛠 Installer PHP et Composer
         run: |
           sudo apt update
-          sudo apt install -y google-chrome-stable chromium-chromedriver
-          sudo ln -sf /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
-          echo "WEBDRIVER_PATH=/usr/local/bin/chromedriver" >> $GITHUB_ENV
-      
-      - name: 🔍 Vérifier l'installation de Chrome et ChromeDriver
+          sudo apt install -y php-cli unzip curl
+          curl -sS https://getcomposer.org/installer | php
+          sudo mv composer.phar /usr/local/bin/composer
+          composer install
+
+      - name: 🐳 Lancer OWASP ZAP en mode headless
         run: |
-          echo "✅ Vérification des installations"
-          which google-chrome || echo "🚨 Google Chrome non trouvé"
-          which chromedriver || echo "🚨 ChromeDriver non trouvé"
-          google-chrome --version || echo "🚨 Problème avec Google Chrome"
-          chromedriver --version || echo "🚨 Problème avec ChromeDriver"
-      
-      - name: ✅ Exécuter les tests Selenium (Test 1)
-        env:
-          PATH: "/usr/local/bin:$PATH"  # 🔥 Ajoute ChromeDriver au PATH
-        run: python tests/selenium_tests.py
-      
+          docker run -d --name zap -p 8080:8080 owasp/zap2docker-stable zap.sh -daemon -port 8080
+          sleep 10 # Attendre que ZAP démarre
 
-      - name: ✅ Exécuter les tests Selenium (Test 2)
-        run: python tests/selenium_test_pack_or.py
+      - name: 🕷 Exécuter Spider Scan
+        run: python3 tests/spider.py
 
-      - name: 🕷 Lancer Spider ZAP
-        run: python tests/spider.py
+      - name: 🔥 Exécuter Active Scan
+        run: python3 tests/active_scan.py
 
-      - name: 🔍 Lancer Scan Actif ZAP
-        run: python tests/active_scan.py
+      - name: 🔑 Exécuter Form Authentication
+        run: python3 tests/form_autentification.py
 
-      - name: 🔑 Lancer Scan Authentification ZAP
-        run: python tests/form_autentification.py
-
-      - name: ✅ 📧 Envoyer une notification en cas de succès
-        if: success()
+      - name: 📩 Envoyer une notification par mail
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
-          username: ${{ secrets.EMAIL_USER }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "[SUCCÈS] Pipeline - Tests réussis !"
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "[Jenkins] Exécution terminée : Pipeline gestion_note"
           to: "aboulayesamb@gmail.com"
           from: "GitHub Actions"
-          body: "Tous les tests Selenium et ZAP ont réussi. Consulte les logs pour plus d'infos."
+          body: |
+            Bonjour,
 
-      - name: ❌ 📧 Envoyer une notification en cas d'échec
-        if: failure()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.EMAIL_USER }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "❌ [ÉCHEC] Pipeline - Tests échoués !!"
-          to: "aboulayesamb@gmail.com"
-          from: "GitHub Actions"
-          body: "Certains tests ont échoué. Consulte les logs GitHub Actions."
+            L'exécution du pipeline CI/CD est terminée avec succès.
+
+            - ✅ Résultat : ${{ job.status }}
+            - 📅 Date : $(date)
+            - 🔍 Consultez GitHub Actions pour plus de détails.
+
+            Cordialement,
+            GitHub Actions
