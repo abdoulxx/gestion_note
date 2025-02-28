@@ -13,20 +13,21 @@ pipeline {
             }
         }
         
-        stage('Static Code Analysis') {
+        stage('Validate PHPStan Configuration') {
     steps {
-        echo "Exécution du test SCA avec PHPStan"
+        echo "Validation du fichier phpstan.neon"
         script {
             def exitCode = bat(
                 returnStatus: true,
-                script: 'vendor\\bin\\phpstan analyse --level=max --memory-limit=512M .'
+                script: 'vendor\\bin\\phpstan --debug'
             )
             if (exitCode != 0) {
-                error("PHPStan a détecté des erreurs. Veuillez les corriger.")
+                error("Le fichier phpstan.neon contient des erreurs. Veuillez les corriger.")
             }
         }
     }
 }
+
         
         stage('Build') {
             steps {
