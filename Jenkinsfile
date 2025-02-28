@@ -13,20 +13,20 @@ pipeline {
             }
         }
         
-          stage('Static Code Analysis') {
-            steps {
-                echo "Exécution du test SCA avec PHPStan"
-                script {
-                    def exitCode = bat(
-                        returnStatus: true,
-                        script: 'vendor\\bin\\phpstan analyse --level=max .'
-                    )
-                    if (exitCode != 0) {
-                        error("PHPStan a détecté des erreurs. Veuillez les corriger.")
-                    }
-                }
+        stage('Static Code Analysis') {
+    steps {
+        echo "Exécution du test SCA avec PHPStan"
+        script {
+            def exitCode = bat(
+                returnStatus: true,
+                script: 'vendor\\bin\\phpstan analyse --level=max --memory-limit=512M .'
+            )
+            if (exitCode != 0) {
+                error("PHPStan a détecté des erreurs. Veuillez les corriger.")
             }
         }
+    }
+}
         
         stage('Build') {
             steps {
