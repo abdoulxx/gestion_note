@@ -25,19 +25,21 @@ jobs:
       - name: 🐳 Vérifier Docker
         run: docker version
 
-      - name: 🛠 Télécharger l'image OWASP ZAP depuis Docker Hub
-        run: docker pull zaproxy/zap-stable
-
       - name: 🐳 Lancer OWASP ZAP en mode headless
         run: |
           docker run -d --name zap -p 8080:8080 zaproxy/zap-stable zap.sh -daemon -port 8080
-          sleep 15 # Laisser ZAP démarrer
+          echo "⏳ Attente du démarrage de ZAP..."
+          sleep 30 # Attendre 30 secondes
+          echo "✅ OWASP ZAP devrait être prêt !"
+
+      - name: 📜 Vérifier si OWASP ZAP est en cours d'exécution
+        run: docker ps -a
+
+      - name: 🔍 Vérifier l'accès à OWASP ZAP
+        run: curl -I http://127.0.0.1:8080
 
       - name: 🛠 Installer les dépendances Python
         run: pip install python-owasp-zap-v2.4
-
-      - name: 📜 Vérifier les logs de ZAP
-        run: docker logs zap
 
       - name: 🕷 Exécuter Spider Scan
         run: python3 tests/spider.py
