@@ -29,14 +29,19 @@ jobs:
         run: |
           docker run -d --name zap -p 8080:8080 zaproxy/zap-stable zap.sh -daemon -port 8080
           echo "⏳ Attente du démarrage de ZAP..."
-          sleep 30 # Attendre 30 secondes
-          echo "✅ OWASP ZAP devrait être prêt !"
+          for i in {1..10}; do
+            if curl -s http://127.0.0.1:8080 > /dev/null; then
+              echo "✅ OWASP ZAP est prêt !"
+              exit 0
+            fi
+            echo "⏳ ZAP n'est pas encore prêt... Nouvelle tentative dans 5 secondes"
+            sleep 5
+          done
+          echo "❌ Échec : ZAP ne répond toujours pas après 50 secondes."
+          exit 1
 
-      - name: 📜 Vérifier si OWASP ZAP est en cours d'exécution
-        run: docker ps -a
-
-      - name: 🔍 Vérifier l'accès à OWASP ZAP
-        run: curl -I http://127.0.0.1:8080
+      - name: 📜 Vérifier les logs de OWASP ZAP avant les tests
+        run: docker logs zap
 
       - name: 🛠 Installer les dépendances Python
         run: pip install python-owasp-zap-v2.4
