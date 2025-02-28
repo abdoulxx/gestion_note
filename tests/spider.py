@@ -8,7 +8,7 @@ target = 'https://regisono.com'
 apiKey = '1odfud9vtbks0u32430lmt6cqc'
 
 # Connexion à l'API OWASP ZAP avec le bon port
-zap = ZAPv2(apikey=apiKey, proxies={'http': 'http://127.0.0.1:8080', 'https': 'http://127.0.0.1:8080'})
+zap = ZAPv2(apikey=apiKey, proxies={'http': 'http://127.0.0.1:8081', 'https': 'http://127.0.0.1:8081'})
 
 # Vérifier la connexion
 try:
