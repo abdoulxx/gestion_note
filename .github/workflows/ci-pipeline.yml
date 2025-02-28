@@ -49,6 +49,11 @@ jobs:
             ELAPSED=$((ELAPSED+10))
           done
 
+      - name: 🔍 Vérifier la connexion API de ZAP
+        run: |
+          echo "Test de connexion à l'API ZAP..."
+          curl -s http://127.0.0.1:8080/JSON/core/view/version/
+
       - name: 📜 Vérifier les logs de OWASP ZAP
         run: docker logs zap
 
