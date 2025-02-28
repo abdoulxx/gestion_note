@@ -44,7 +44,7 @@ jobs:
       - name: 🖥 Lancer le test Selenium
         run: |
           source venv/bin/activate
-          python3 tests/selenium_test_pack_or.py
+          python3 tests/selenium_test_pack_or4.py
 
       - name: 📩 Envoyer une notification par mail
         uses: dawidd6/action-send-mail@v3
