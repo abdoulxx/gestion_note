@@ -1,28 +1,34 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import time
 from zapv2 import ZAPv2
 
-# The URL of the application to be tested
+# URL de l'application cible
 target = 'https://regisono.com'
-# Change to match the API key set in ZAP, or use None if the API key is disabled
+# Clé API de ZAP (à modifier selon ta configuration)
 apiKey = '1odfud9vtbks0u32430lmt6cqc'
 
-# By default ZAP API client will connect to port 8080
-zap = ZAPv2(apikey=apiKey, proxies={'http': 'http://127.0.0.1:8081', 'https': 'http://127.0.0.1:8081'})
-# Use the line below if ZAP is not listening on port 8080, for example, if listening on port 8090
-# zap = ZAPv2(apikey=apiKey, proxies={'http': 'http://127.0.0.1:8090', 'https': 'http://127.0.0.1:8090'})
+# Connexion à l'API OWASP ZAP
+zap = ZAPv2(apikey=apiKey, proxies={'http': 'http://127.0.0.1:8080', 'https': 'http://127.0.0.1:8080'})
 
-print('Spidering target {}'.format(target))
-# The scan returns a scan id to support concurrent scanning
+# Vérifier la connexion
+try:
+    print(f"Connexion à ZAP : Version {zap.core.version}")
+except Exception as e:
+    print(f" Erreur de connexion à ZAP : {e}")
+    exit(1)
+
+# Lancer le Spider Scan
+print(f" Lancement du Spider sur {target}")
 scanID = zap.spider.scan(target)
-while int(zap.spider.status(scanID)) < 100:
-    # Poll the status until it completes
-    print('Spider progress %: {}'.format(zap.spider.status(scanID)))
-    time.sleep(1)
 
-print('Spider has completed!')
-# Prints the URLs the spider has crawled
-print('\n'.join(map(str, zap.spider.results(scanID))))
-# If required post process the spider results
+# Vérifier si le scan a démarré correctement
+if scanID.isdigit():
+    while int(zap.spider.status(scanID)) < 100:
+        print(f" Progression du scan : {zap.spider.status(scanID)}%")
+        time.sleep(2)
 
-# TODO: Explore the Application more with Ajax Spider or Start scanning the application for vulnerabilitie
+    print(" Spider terminé avec succès !")
+    print("\nURLs découvertes :")
+    print('\n'.join(zap.spider.results(scanID)))
+else:
+    print(" Échec du lancement du Spider. Vérifiez l'API ZAP.")

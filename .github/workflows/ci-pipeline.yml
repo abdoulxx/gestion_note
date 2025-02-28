@@ -33,6 +33,9 @@ jobs:
           docker run -d --name zap -p 8080:8080 zaproxy/zap-stable zap.sh -daemon -port 8080
           sleep 15 # Laisser ZAP démarrer
 
+      - name: 🛠 Installer les dépendances Python
+        run: pip install python-owasp-zap-v2.4
+
       - name: 📜 Vérifier les logs de ZAP
         run: docker logs zap
 
