@@ -26,11 +26,11 @@ jobs:
         run: docker version
 
       - name: 🛠 Télécharger l'image OWASP ZAP depuis Docker Hub
-        run: docker pull owasp/zap2docker-stable:weekly
+        run: docker pull owasp/zap:stable
 
       - name: 🐳 Lancer OWASP ZAP en mode headless
         run: |
-          docker run -d --name zap -p 8080:8080 owasp/zap2docker-stable:weekly zap.sh -daemon -port 8080
+          docker run -d --name zap -p 8080:8080 owasp/zap:stable zap.sh -daemon -port 8080
           sleep 15 # Laisser ZAP démarrer
 
       - name: 📜 Vérifier les logs de ZAP
