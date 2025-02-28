@@ -1,4 +1,4 @@
-name: CI/CD Gestion_Note
+name: CI/CD regisono
 
 on:
   schedule:
@@ -51,8 +51,8 @@ jobs:
         with:
           server_address: smtp.gmail.com
           server_port: 465
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "[GitHub Actions] Test d'acceptation terminé : Gestion_Note"
           to: "aboulayesamb@gmail.com"
           from: "GitHub Actions"
