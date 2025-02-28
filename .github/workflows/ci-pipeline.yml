@@ -25,7 +25,7 @@ jobs:
       - name: 🐳 Vérifier Docker
         run: docker version
 
-      - name: 🐳 Lancer OWASP ZAP en mode headless (avec API activée)
+      - name: 🐳 Lancer OWASP ZAP en mode headless (avec accès API)
         run: |
           docker run -d --name zap -p 8080:8080 zaproxy/zap-stable zap.sh \
             -daemon -host 0.0.0.0 -port 8080 \
@@ -35,7 +35,7 @@ jobs:
           TIMEOUT=300 # Max 5 minutes
           ELAPSED=0
           while true; do
-            if docker logs zap | grep -i "API key" > /dev/null; then
+            if curl -s http://127.0.0.1:8080 > /dev/null; then
               echo "✅ OWASP ZAP est prêt et accepte les connexions API !"
               break
             fi
@@ -49,19 +49,10 @@ jobs:
             ELAPSED=$((ELAPSED+10))
           done
 
-      - name: 🔑 Récupérer la clé API de ZAP
-        run: |
-          API_KEY=$(docker logs zap | grep -i "API key" | awk -F ':' '{print $2}' | tr -d ' ')
-          echo "ZAP_API_KEY=$API_KEY" >> $GITHUB_ENV
-          echo "🔑 Clé API de ZAP récupérée"
-
-      - name: ⏳ Attendre que ZAP soit complètement prêt
-        run: sleep 10
-
       - name: 🔍 Vérifier la connexion API de ZAP
         run: |
           echo "Test de connexion à l'API ZAP..."
-          curl -v "http://127.0.0.1:8080/JSON/core/view/version/?apikey=$ZAP_API_KEY"
+          curl -s http://127.0.0.1:8080/JSON/core/view/version/
 
       - name: 📜 Vérifier les logs de OWASP ZAP
         run: docker logs zap
