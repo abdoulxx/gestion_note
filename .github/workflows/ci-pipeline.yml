@@ -52,7 +52,7 @@ jobs:
       - name: 🔍 Vérifier la connexion API de ZAP
         run: |
           echo "Test de connexion à l'API ZAP..."
-          curl -i http://127.0.0.1:8080/JSON/core/view/version/ || (echo "⚠️ ZAP ne répond pas correctement !" && docker logs zap && exit 1)
+          curl -s http://127.0.0.1:8080/JSON/core/view/version/
 
       - name: 📜 Vérifier les logs de OWASP ZAP
         run: docker logs zap
