@@ -2,13 +2,13 @@ name: CI/CD regisono
 
 on:
   schedule:
-    - cron: '0 */12 * * *' # Exécution toutes les 12 heures
+    - cron: '0 */6 * * *' # Exécution toutes les 6 heures
   push:
     branches:
       - main
 
 jobs:
-  acceptance_test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Cloner le dépôt
@@ -46,6 +46,9 @@ jobs:
           source venv/bin/activate
           python3 tests/selenium_test_pack_or4.py
 
+      - name: 📅 Définir la date d'exécution
+        run: echo "DATE_EXECUTION=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
       - name: 📩 Envoyer une notification par mail
         uses: dawidd6/action-send-mail@v3
         with:
@@ -59,10 +62,10 @@ jobs:
           body: |
             Bonjour,
 
-            L'exécution du test d'acceptation Selenium est terminée avec succès.
+            L'exécution du test d'acceptation Selenium est terminée.
 
             - ✅ Résultat : ${{ job.status }}
-            - 📅 Date : $(date)
+            - 📅 Date : ${{ env.DATE_EXECUTION }}
             - 🔍 Consultez GitHub Actions pour plus de détails.
 
             Cordialement,
