@@ -26,7 +26,13 @@ jobs:
         run: docker version
 
       - name: 🔑 Se connecter à GHCR (GitHub Container Registry)
-        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+        run: |
+          if [[ -z "${{ secrets.GHCR_USERNAME }}" || -z "${{ secrets.GHCR_TOKEN }}" ]]; then
+            echo "❌ Erreur : Les identifiants GHCR ne sont pas définis."
+            exit 1
+          fi
+          echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+      
 
       - name: 🛠 Télécharger l'image OWASP ZAP (nouveau dépôt)
         run: docker pull ghcr.io/zaproxy/zap-stable
