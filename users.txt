@@ -13,7 +13,7 @@ pipeline {
     agent any
 
     triggers {
-        cron('H */12 * * *') // Exécution automatique toutes les 12 heures
+        cron('H */6 * * *') 
     }
 
     stages {
@@ -71,7 +71,7 @@ pipeline {
             echo "Pipeline terminé"
 
             mail to: 'aboulayesamb@gmail.com',
-                 subject: "[Jenkins] Exécution terminée : Pipeline gestion_note",
+                 subject: "[Jenkins] Exécution terminée : Pipeline regisono",
                  body: """Bonjour,
 
 L'exécution du pipeline Jenkins est terminée.
