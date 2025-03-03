@@ -16,7 +16,8 @@ pipeline {
         stage('Static Code Analysis') {
             steps {
                 echo "Exécution du test SCA avec PHPStan"
-                bat 'vendor\\bin\\phpstan analyse --level=max src/ --no-progress --error-format=table'
+                bat 'vendor\\bin\\phpstan analyse --level=max src/ --no-progress --error-format=table --memory-limit=512M'
+
 
             }
         }
