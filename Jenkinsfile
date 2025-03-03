@@ -30,7 +30,7 @@ stage('SQL Injection Test') {
     steps {
         echo "Test d'injection SQL avec SQLMap"
         bat '''
-            "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\Scripts\\sqlmap.exe" -u "https://regisono/login.php?id=1" --batch --dbs
+            "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\Scripts\\sqlmap.exe" -u "https://regisono.com/login.php?id=1" --batch --dbs
         '''
     }
 }
