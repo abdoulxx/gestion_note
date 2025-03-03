@@ -30,10 +30,11 @@ stage('SQL Injection Test') {
     steps {
         echo "Test d'injection SQL avec SQLMap"
         bat '''
-            python sqlmap/sqlmap.py -u "http://regisono/login.php?id=1" --batch --dbs
+            python -m sqlmap -u "https://regisono/login.php?id=1" --batch --dbs
         '''
     }
 }
+
 
         
         stage('Build') {
