@@ -16,10 +16,8 @@ pipeline {
         stage('Static Code Analysis') {
             steps {
                 echo "Exécution du test SCA avec PHPStan"
-                bat '''
-                    composer require --dev phpstan/phpstan
-                    vendor\\bin\\phpstan analyse --level=max src/
-                '''
+                bat 'vendor\\bin\\phpstan analyse --level=max src/ --no-progress --error-format=table'
+
             }
         }
         
