@@ -13,6 +13,5 @@ parameters:
         - resultats.php
     excludePaths:
         - vendor/.*  # Exclure les fichiers du dossier vendor
-parameters:
     resultCache:
-        path: null
+        path: null  # Désactive le cache
