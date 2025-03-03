@@ -14,14 +14,19 @@ pipeline {
         }
         
         stage('Static Code Analysis') {
-            steps {
-                echo "Exécution du test SCA avec PHPStan"
-                bat '''
-                    vendor\\bin\\phpstan analyse --level=max src/ --no-progress --error-format=table --memory-limit=2G
-                    exit /b 0
-                '''
+    steps {
+        echo "Exécution du test SCA avec PHPStan"
+        script {
+            def exitCode = bat(returnStatus: true, script: '''
+                vendor\\bin\\phpstan analyse --level=max src/ --no-progress --error-format=table --memory-limit=2G
+            ''')
+            if (exitCode != 0) {
+                echo "⚠️ PHPStan a trouvé des erreurs, mais on continue l'exécution du pipeline."
             }
         }
+    }
+}
+
         
         stage('Build') {
             steps {
