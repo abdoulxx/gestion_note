@@ -10,6 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: 📥 Cloner le dépôt
         uses: actions/checkout@v3
@@ -21,6 +22,10 @@ jobs:
           curl -sS https://getcomposer.org/installer | php
           sudo mv composer.phar /usr/local/bin/composer
           composer install
+
+      - name: 🔍 Exécuter PHPStan (Static Code Analysis)
+        run: |
+          vendor/bin/phpstan analyse --level=max src/ --no-progress --error-format=table --memory-limit=2G || true
 
       - name: 🌐 Installer Google Chrome et ChromeDriver
         run: |
@@ -41,10 +46,37 @@ jobs:
           source venv/bin/activate
           pip install selenium webdriver-manager
 
-      - name: 🖥 Lancer le test Selenium
+      - name: 🖥 Lancer le test Selenium - Test 1
         run: |
           source venv/bin/activate
-          python3 tests/selenium_test_pack_or4.py
+          python3 tests/selenium_tests.py
+
+      - name: 🖥 Lancer le test Selenium - Test 2
+        run: |
+          source venv/bin/activate
+          python3 tests/selenium_test_pack_or.py
+
+      - name: 🛡️ Test d'injection SQL avec SQLMap
+        run: |
+          source venv/bin/activate
+          wget https://github.com/sqlmapproject/sqlmap/archive/refs/heads/master.zip
+          unzip master.zip
+          python3 sqlmap-master/sqlmap.py -u "https://regisono.com/login.php?id=1" --batch --dbs --random-agent --tamper=space2comment || true
+
+      # - name: 🕷️ Exécuter le scan Spider avec ZAP
+      #   run: |
+      #     source venv/bin/activate
+      #     python3 tests/spider.py
+
+      # - name: 🔍 Exécuter le scan actif avec ZAP
+      #   run: |
+      #     source venv/bin/activate
+      #     python3 tests/active_scan.py
+
+      # - name: 🔑 Exécuter le test d'authentification avec ZAP
+      #   run: |
+      #     source venv/bin/activate
+      #     python3 tests/form_autentification.py
 
       - name: 📅 Définir la date d'exécution
         run: echo "DATE_EXECUTION=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
@@ -62,7 +94,7 @@ jobs:
           body: |
             Bonjour,
 
-            L'exécution du test d'acceptation Selenium est terminée.
+            L'exécution du pipeline est terminée.
 
             - ✅ Résultat : ${{ job.status }}
             - 📅 Date : ${{ env.DATE_EXECUTION }}
