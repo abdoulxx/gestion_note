@@ -27,18 +27,7 @@ pipeline {
             }
         }
 
-        stage('SQL Injection Test 1') {
-            steps {
-                bat '''
-                    "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\Scripts\\sqlmap.exe" \
-                    -u "https://regisono.com/login.php?id=1" \
-                    --batch --dbs --random-agent --tamper=space2comment \
-                    --cookie="PHPSESSID=9db53e743d9bb20e8c28a075ef6132b6"
-                '''
-            }
-        }
-
-        stage('SQL Injection Test 2 (Automatisation)') {
+        stage('SQL Injection Test (Automatisation)') {
             steps {
                 bat '''
                     "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\automatisation_sqlmap.py
@@ -51,7 +40,6 @@ pipeline {
                 echo "Build stage: Compilation / Packaging (si nécessaire)"
             }
         }
-        /*
 
         stage('Run Selenium Tests - Test 1') {
             steps {
@@ -64,7 +52,6 @@ pipeline {
                 bat '"C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\selenium_test_pack_or.py'
             }
         }
-        */
 
         stage('Run spider') {
             steps {
