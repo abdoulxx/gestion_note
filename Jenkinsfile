@@ -27,7 +27,7 @@ pipeline {
             }
         }
 
-        stage('SQL Injection Test') {
+        stage('SQL Injection Test 1') {
             steps {
                 bat '''
                     "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\Scripts\\sqlmap.exe" \
@@ -38,11 +38,20 @@ pipeline {
             }
         }
 
+        stage('SQL Injection Test 2 (Automatisation)') {
+            steps {
+                bat '''
+                    "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" automatisation_sqlmap.py
+                '''
+            }
+        }
+
         stage('Build') {
             steps {
                 echo "Build stage: Compilation / Packaging (si nécessaire)"
             }
         }
+        /*
 
         stage('Run Selenium Tests - Test 1') {
             steps {
@@ -55,6 +64,7 @@ pipeline {
                 bat '"C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\selenium_test_pack_or.py'
             }
         }
+        */
 
         stage('Run spider') {
             steps {
