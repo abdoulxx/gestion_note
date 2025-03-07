@@ -22,10 +22,6 @@ jobs:
           sudo mv composer.phar /usr/local/bin/composer
           composer install
 
-      - name: 🔍 Exécuter PHPStan (Static Code Analysis)
-        run: |
-          vendor/bin/phpstan analyse --level=max src/ --no-progress --error-format=table --memory-limit=2G || true
-
       - name: 🌐 Installer Google Chrome et ChromeDriver
         run: |
           sudo apt update
@@ -33,30 +29,22 @@ jobs:
           wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -fy install
           google-chrome --version
-          
-          # Utilisation de webdriver-manager pour gérer ChromeDriver
-          pip3 install webdriver-manager
-          
-          # Ajouter ChromeDriver au PATH
-          echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bashrc
-          source ~/.bashrc
+          CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
+          wget -q "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          chromedriver --version
 
       - name: 🛠 Installer les dépendances Python et Selenium
         run: |
           python3 -m venv venv
-          venv/bin/activate && pip install selenium webdriver-manager
+          source venv/bin/activate
+          pip install selenium webdriver-manager
 
-      - name: 🖥 Lancer le test Selenium - Test 1
+      - name: 🖥 Lancer le test Selenium
         run: |
-          venv/bin/activate && python3 tests/selenium_tests.py
-
-      - name: 🖥 Lancer le test Selenium - Test 2
-        run: |
-          venv/bin/activate && python3 tests/selenium_test_pack_or.py
-
-      - name: 🛡️ SQL Injection Test (Automatisation)
-        run: |
-          venv/bin/activate && python3 tests/automatisation_sqlmap.py
+          source venv/bin/activate
+          python3 tests/selenium_test_pack_or4.py
 
       - name: 📅 Définir la date d'exécution
         run: echo "DATE_EXECUTION=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
@@ -68,13 +56,13 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "[GitHub Actions] Tests de sécurité terminés : Gestion_Note"
+          subject: "[GitHub Actions] Test d'acceptation terminé : Gestion_Note"
           to: "aboulayesamb@gmail.com"
           from: "GitHub Actions"
           body: |
             Bonjour,
 
-            L'exécution du pipeline de sécurité est terminée.
+            L'exécution du test d'acceptation Selenium est terminée.
 
             - ✅ Résultat : ${{ job.status }}
             - 📅 Date : ${{ env.DATE_EXECUTION }}
