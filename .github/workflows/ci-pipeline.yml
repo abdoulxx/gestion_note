@@ -28,14 +28,16 @@ jobs:
 
       - name: 🌐 Installer Google Chrome et ChromeDriver
         run: |
-          sudo apt update
-          sudo apt install -y wget unzip google-chrome-stable
-          CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
-          wget -q "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
-          chromedriver --version
-
+            sudo apt update
+            sudo apt install -y wget unzip
+            wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -fy install
+            google-chrome --version
+            CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
+            wget -q "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+            unzip chromedriver_linux64.zip
+            sudo mv chromedriver /usr/local/bin/
+            chromedriver --version
 
       - name: 🛠 Installer les dépendances Python et Selenium
         run: |
