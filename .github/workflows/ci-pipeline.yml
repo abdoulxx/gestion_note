@@ -34,7 +34,7 @@ jobs:
 
       - name: 🔥 Test d'injection SQL (sqlmap)
         run: |
-          python3 tests/automatisation_sqlmap.py
+          python3 tests/sqlmap.py
 
       - name: 🌐 Installer Google Chrome et ChromeDriver
         run: |
