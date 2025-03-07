@@ -26,7 +26,7 @@ commande_sqlmap = [
     "--time-sec=5"
 ]
 
-print(f"🔍 Lancement de l'analyse SQLMap sur {URL_CIBLE}...")
+print(f" Lancement de l'analyse SQLMap sur {URL_CIBLE}...")
 try:
     resultat = subprocess.run(commande_sqlmap, capture_output=True, text=True, check=True, timeout=600)
     print(resultat.stdout)
