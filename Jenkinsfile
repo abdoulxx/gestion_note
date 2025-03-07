@@ -41,7 +41,7 @@ pipeline {
         stage('SQL Injection Test 2 (Automatisation)') {
             steps {
                 bat '''
-                    "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" automatisation_sqlmap.py
+                    "C:\\Users\\aboul\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" tests\\automatisation_sqlmap.py
                 '''
             }
         }
