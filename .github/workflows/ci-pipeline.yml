@@ -26,6 +26,12 @@ jobs:
         run: |
           vendor/bin/phpstan analyse --level=max src/ --no-progress --error-format=table --memory-limit=2G || echo "PHPStan a trouvé des erreurs, mais on continue l'exécution."
 
+      - name: 🔧 Installer SQLMap
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip
+          pip install sqlmap
+
       - name: 🔥 Test d'injection SQL (sqlmap)
         run: |
           python3 tests/automatisation_sqlmap.py
