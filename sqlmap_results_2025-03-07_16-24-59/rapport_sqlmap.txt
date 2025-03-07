@@ -1,0 +1,27 @@
+        ___
+       __H__
+ ___ ___[)]_____ ___ ___  {1.9.2#pip}
+|_ -| . [,]     | .'| . |
+|___|_  [']_|_|_|__,|  _|
+      |_|V...       |_|   https://sqlmap.org
+
+[!] legal disclaimer: Usage of sqlmap for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program
+
+[*] starting @ 16:25:00 /2025-03-07/
+
+[16:25:00] [WARNING] using 'C:\wamp64\www\Gestion_note\sqlmap_results_2025-03-07_16-24-59' as the output directory
+[16:25:00] [INFO] loading tamper module 'space2comment'
+[16:25:00] [INFO] fetched random HTTP User-Agent header value 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.4) Gecko/20070530 Fedora/2.0.0.4-1.fc7 Firefox/2.0.0.4' from file 'C:\Users\aboul\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlmap\data\txt\user-agents.txt'
+[16:25:00] [INFO] testing connection to the target URL
+you have not declared cookie(s), while server wants to set its own ('PHPSESSID=64c8967943d...a71151b684'). Do you want to use those [Y/n] Y
+[16:25:04] [INFO] checking if the target is protected by some kind of WAF/IPS
+[16:25:06] [INFO] testing if the target URL content is stable
+[16:25:07] [INFO] target URL content is stable
+[16:25:07] [INFO] testing if GET parameter 'id' is dynamic
+[16:25:08] [WARNING] GET parameter 'id' does not appear to be dynamic
+[16:25:10] [WARNING] heuristic (basic) test shows that GET parameter 'id' might not be injectable
+[16:25:11] [INFO] skipping GET parameter 'id'
+[16:25:11] [CRITICAL] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests
+
+[*] ending @ 16:25:11 /2025-03-07/
+

