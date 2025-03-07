@@ -22,6 +22,14 @@ jobs:
           sudo mv composer.phar /usr/local/bin/composer
           composer install
 
+      - name: 🔎 Analyse statique du code avec PHPStan
+        run: |
+          vendor/bin/phpstan analyse --level=max src/ --no-progress --error-format=table --memory-limit=2G || echo "PHPStan a trouvé des erreurs, mais on continue l'exécution."
+
+      - name: 🔥 Test d'injection SQL (sqlmap)
+        run: |
+          python3 tests/automatisation_sqlmap.py
+
       - name: 🌐 Installer Google Chrome et ChromeDriver
         run: |
           sudo apt update
